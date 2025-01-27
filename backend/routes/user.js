@@ -1,70 +1,64 @@
-const router = require("express").Router();
+const express = require("express");
+const router = express.Router();
 const User = require("../models/user.js");
-const bycript = require("bcrypt");
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const verifyToken = require("./auth.js");
+const JWT_SECRET = process.env.JWT_SECRET || "defaultSecretKey";
 
-// sign in route
-router.post("/signin", verifyToken ,async (req,res)=>{
-   try {
-    const {username,email,password} = req.body;
-   
-    const existUsername = await User.findOne({username: username});
-    const existEmail = await User.findOne({email: email});
+// Sign-up Route
+router.post("/signin", async (req, res) => {
+  try {
+    const { username, email, password } = req.body;
 
-    if(existUsername || existEmail ){
-       return res.status(400).json({message: "Username or Email already exits"})
-    }else if(username.length < 4){
-        return res.status(400).json({message: "Username should have at least 4 characters"});
+    if (!username || !email || !password) {
+      return res.status(400).json({ message: "All fields are required." });
     }
-   const haspass = await bycript.hash(req.body.password,10);
-    const newUser = new User({
-        username: req.body.username,
-        email: req.body.email,
-        password:haspass ,
-    });
-
+    if (username.length < 4) {
+      return res.status(400).json({ message: "Username must be at least 4 characters long." });
+    }
+    if (password.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters long." });
+    }
+    const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+    if (existingUser) {
+      return res.status(400).json({ message: "Username or email already exists." });
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({ username, email, password: hashedPassword });
     await newUser.save();
-    return res.status(200).json({message:"Sign up completed"});
-   } catch (error) {
-    console.log(error);
-    return res.status(400).json({message: "Internal server error"})
-    
-   }
 
+    res.status(200).json({ message: "Sign-up completed successfully!" });
+  } catch (error) {
+    console.error("Error during sign-up:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
-//log in route 
-router.get("/login",verifyToken, async (req, res)=>{
-    try {
-        const { email, password } = req.body;
+// Log-in Route
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-        // Check if email exists
-        const existEmail = await User.findOne({ email });
-        if (!existEmail) {
-            return res.status(400).json({ message: "Invalid credentials!" });
-        }
-
-        // Compare password
-        const isPasswordValid = await bycript.compare(password, existEmail.password);
-        if (!isPasswordValid) {
-            return res.status(400).json({ message: "Invalid credentials!" });
-        }
-
-        // Generate JWT token
-        const payload = { email: existEmail.email, id: existEmail._id };
-        const token = jwt.sign(payload, "ttooppuu", { expiresIn: "1d" });
-
-        // Respond with user details and token
-        res.status(200).json({
-            id: existEmail._id,
-            email: existEmail.email,
-            token: token,
-        });
-    } catch (error) {
-        console.error("Error during login:", error);
-        res.status(500).json({ message: "Internal server error" });
+    if (!email || !password) {
+      return res.status(400).json({ message: "All fields are required." });
     }
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "Invalid email or password." });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "Invalid email or password." });
+    }
+
+    // Generate JWT
+    const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: "1d" });
+    res.status(200).json({ message:"Log in successfull", id: user._id,token });
+  } catch (error) {
+    console.error("Error during login:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
-module.exports = router;  
+module.exports = router;
