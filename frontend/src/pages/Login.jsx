@@ -10,7 +10,6 @@ const Login = () => {
   if (isLoggedIn == true) {
     navigate('/');
   }
-  const history = useNavigate();
  const dispatch = useDispatch();
 
   const [Data, setData] = useState({ email: "", password: "" });
@@ -30,10 +29,12 @@ const Login = () => {
       }else{
        const response = await axios.post("http://localhost:8080/api/v1/login", Data); 
       setData({email: "", password: "" });
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("id", response.data.id);
       setAlert(response.data.message); // Show alert message
       setTimeout(() => setAlert(""), 3000); // Hide alert after 3 seconds
       dispatch(authActions.login());
-      history("/");
+      navigate("/");
     }
     } catch (error) {
       setAlert(error.response.data.message); // Show alert message
