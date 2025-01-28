@@ -13,7 +13,7 @@ import axios from "axios";
 const Sideber = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [Data, setData] = useState();
+;
 
   const data = [
     {
@@ -37,7 +37,7 @@ const Sideber = () => {
       link: "/incompleted_tasks",
     },
   ];
-
+  const [Data, setData] = useState("")
   const logout = () => {
     // Clear auth data and redirect
     dispatch(authActions.logout());
@@ -51,7 +51,7 @@ const Sideber = () => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      console.error("Token not found. Redirecting to login...");
+      // console.error("Token not found. Redirecting to login...");
       navigate("/login");
       return;
     }
@@ -63,10 +63,9 @@ const Sideber = () => {
 
     try {
       const response = await axios.get("http://localhost:8080/api/v2/gettask", { headers });
-      console.log(response.data.data);
       setData(response.data.data);
     } catch (error) {
-      console.error("Error fetching tasks:", error);
+      alert("Error fetching tasks:", error);
       navigate("/login");
     }
   };
