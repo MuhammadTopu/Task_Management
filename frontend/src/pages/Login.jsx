@@ -93,7 +93,7 @@ const Login = () => {
           >
             Log in
           </button>
-          <Link to="/signup" className="text-blue-400 hover:text-blue-600">
+          <Link to={"/signup"} className="text-blue-400 hover:text-blue-600">
             Or, create a new account.
           </Link>
         </div>

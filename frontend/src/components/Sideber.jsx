@@ -13,7 +13,7 @@ import axios from "axios";
 const Sideber = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-;
+  const [Data, setData] = useState();
 
   const data = [
     {
@@ -37,13 +37,13 @@ const Sideber = () => {
       link: "/incompleted_tasks",
     },
   ];
-  const [Data, setData] = useState("")
+
   const logout = () => {
     // Clear auth data and redirect
     dispatch(authActions.logout());
     localStorage.removeItem("id");
     localStorage.removeItem("token");
-    navigate("/login");
+    navigate("/login",{replace: true});
   };
 
  useEffect(() => {
@@ -51,8 +51,8 @@ const Sideber = () => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      // console.error("Token not found. Redirecting to login...");
-      navigate("/login");
+      console.error("Token not found. Redirecting to login...");
+      navigate("/login",{replace:true});
       return;
     }
 
@@ -60,14 +60,9 @@ const Sideber = () => {
       id: localStorage.getItem("id"),
       authorization: `Bearer ${token}`,
     };
-
-    try {
       const response = await axios.get("http://localhost:8080/api/v2/gettask", { headers });
       setData(response.data.data);
-    } catch (error) {
-      alert("Error fetching tasks:", error);
-      navigate("/login");
-    }
+   
   };
 
   fetchData();
@@ -75,11 +70,11 @@ const Sideber = () => {
   
   return (
     <>
-      <div>
+      {Data && <div>
         <h2 className="text-xl font-semibold">{Data.username}</h2>
         <h4 className="mb-1 text-gray-500">{Data.email}</h4>
         <hr />
-      </div>
+      </div>}
       <div>
         {data.map((item, key) => (
           <Link
