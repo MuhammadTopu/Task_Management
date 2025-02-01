@@ -1,8 +1,8 @@
-import Home from './pages/home';
+import Home from './pages/Home';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import Alltasks from './pages/Alltasks';
 import Importanttsks from './pages/Importanttsks';
-import Completedtsk from './pages/completedtsk';
+import Completedtsk from './pages/Completedtsk';
 import Incompletedtsk from './pages/Incompletedtsk';
 import Signup from './pages/Signup';
 import Login from './pages/Login';

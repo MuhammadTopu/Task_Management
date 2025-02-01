@@ -28,7 +28,8 @@ const Cards = ({ home, setInputDiv, data, setData, setUpdatedData }) => {
         ),
       }));
     } catch (error) {
-      console.error("Error updating task:", error);
+      console.log(error);
+      
     }
   };
 
@@ -43,7 +44,7 @@ const Cards = ({ home, setInputDiv, data, setData, setUpdatedData }) => {
         tasks: prevData.tasks.filter((task) => task._id !== id),
       }));
     } catch (error) {
-      console.error("Error deleting task:", error);
+      console.log(error);
     }
   };
 
@@ -64,7 +65,8 @@ const Cards = ({ home, setInputDiv, data, setData, setUpdatedData }) => {
         ),
       }));
     } catch (error) {
-      console.error("Error updating important field:", error);
+      console.log(error);
+     
     }
   };
 
@@ -78,7 +80,9 @@ const Cards = ({ home, setInputDiv, data, setData, setUpdatedData }) => {
       {data.map((task) => (
         <div
           key={task._id}
-          className="bg-gray-800 rounded-md p-4 hover:bg-gray-700 flex flex-col justify-between"
+          className={`${
+            task.complete ? "border-green-900" : "border-red-900"
+          } bg-gray-800 border rounded-md p-4 hover:bg-gray-700 flex flex-col justify-between`}
         >
           <div>
             <h3 className="text-xl font-semibold">{task.title}</h3>
@@ -86,6 +90,7 @@ const Cards = ({ home, setInputDiv, data, setData, setUpdatedData }) => {
           </div>
 
           <div className="mt-2 w-full flex items-center justify-between">
+{/* completed button */}
             <button
               className={`${
                 task.complete ? "bg-green-600" : "bg-red-400"
@@ -95,6 +100,7 @@ const Cards = ({ home, setInputDiv, data, setData, setUpdatedData }) => {
               {task.complete ? "Completed" : "Incomplete"}
             </button>
 
+{/* update button */}
             <div className="flex space-x-2 text-lg font-semibold">
               {home !== true && (
                 <button
@@ -106,8 +112,8 @@ const Cards = ({ home, setInputDiv, data, setData, setUpdatedData }) => {
                 </button>
               )}
 
-              {/* Fixed important toggle button */}
-              <button
+              {/*  important toggle button */}
+             <button
                 onClick={() => handleImpTask(task._id)}
                 className="hover:text-red-600"
               >
@@ -117,8 +123,8 @@ const Cards = ({ home, setInputDiv, data, setData, setUpdatedData }) => {
                   <IoMdStar />
                 )}
               </button>
-
-              <button
+{/* delete task */}
+            <button
                 className="hover:text-gray-900"
                 onClick={() => deleteTask(task._id)}
               >

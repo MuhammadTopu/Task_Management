@@ -1,37 +1,43 @@
-import Cards from '../components/Cards';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import Cards from "../components/Cards";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const ImportantTasks = () => {
-  const [Data, setData] = useState([]); // Initialize as an empty array
+  const [data, setData] = useState([]); // ✅ Ensure it's an array
 
   const headers = {
     id: localStorage.getItem("id"),
     authorization: `Bearer ${localStorage.getItem("token")}`,
   };
 
-  // Fetch tasks from API on component mount
+  // ✅ Fetch tasks on mount
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/v2/geteImp-task", { headers });
+        const response = await axios.get(
+          "http://localhost:8080/api/v2/geteImp-task",
+          { headers }
+        );
 
-        // Ensure the data is an array before setting the state
-        setData(response.data.data || []);
-        
+        // ✅ Ensure response is valid and always an array
+        const tasks = response?.data?.data || [];
+        setData(tasks);
       } catch (error) {
         console.error("Error fetching tasks:", error);
-        setData([]); // Ensure the data is always an array
+        setData([]); // Prevents undefined issues
       }
     };
 
     fetchTasks();
-  }, []); // Empty dependency array to run the effect only once
+  }, []);
 
   return (
     <div>
-      {/* Pass data and setData to Cards component */}
-      <Cards home={true} data={Data} setData={setData} />
+      {data.length === 0 ? (
+        <p className="text-center text-gray-500">There are no important tasks.</p>
+      ) : (
+        <Cards home={true} data={data} setData={setData} /> // ✅ Pass setData
+      )}
     </div>
   );
 };
