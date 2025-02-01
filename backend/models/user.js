@@ -16,12 +16,7 @@ const userSchema = new mongoose.Schema({
         required:true,
         unique:true,
     },
-    tasks:[
-        {
-            type:mongoose.Types.ObjectId,
-            ref:"Task",
-        },
-    ]
+    tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Task" }]
 });
 
 module.exports = mongoose.model("user",userSchema);
