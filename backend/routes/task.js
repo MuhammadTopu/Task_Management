@@ -23,7 +23,7 @@ router.post("/create", verifyToken ,async (req, res) => {
         // Respond with success
         res.status(200).json({ message: "Task is created" });
     } catch (error) {
-        console.error("Error during task creation:", error);
+        // console.error("Error during task creation:", error);
         res.status(500).json({ message: "Internal server error" });
     }
 });
@@ -49,7 +49,7 @@ router.get("/gettask", verifyToken, async (req, res) => {
 
     res.status(200).json({ data: userData });
   } catch (error) {
-    console.error("Error fetching tasks:", error);
+    // console.error("Error fetching tasks:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
@@ -88,7 +88,7 @@ router.delete("/deletetask/:id", verifyToken, async (req, res) => {
 
     res.status(200).json({ message: "Task deleted successfully" });
   } catch (error) {
-    console.error("Error deleting tasks:", error);
+    // console.error("Error deleting tasks:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
@@ -120,7 +120,7 @@ router.put("/updatetask/:id", verifyToken, async (req, res) => {
 
     res.status(200).json({ message: "Task updated successfully", task: updatedTask });
   } catch (error) {
-    console.error("Error updating tasks:", error);
+    // console.error("Error updating tasks:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
@@ -145,7 +145,7 @@ router.put("/updateImp-task/:id", verifyToken, async (req, res) => {
 
     res.status(200).json({ message: "Task updated successfully", task: updatedTask });
   } catch (error) {
-    console.error("Error updating the important field:", error);
+    // console.error("Error updating the important field:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
@@ -158,7 +158,7 @@ router.put("/updateComp-task/:id", verifyToken, async (req, res) => {
     // Check if the task exists
     const taskData = await Task.findById(id);
     if (!taskData) {
-      return res.status(404).json({ message: "Task not found" });
+      // return res.status(404).json({ message: "Task not found" });
     }
 
     // Toggle the 'complete' field
@@ -170,7 +170,7 @@ router.put("/updateComp-task/:id", verifyToken, async (req, res) => {
 
     res.status(200).json({ message: "Task updated successfully", task: updatedTask });
   } catch (error) {
-    console.error("Error updating the completed field:", error);
+    // console.error("Error updating the completed field:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
@@ -197,12 +197,12 @@ router.get("/geteImp-task", verifyToken, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
     if (!userData.tasks || userData.tasks.length === 0) {
-      return res.status(404).json({ message: "No important tasks found" });
+      // return res.status(404).json({ message: "No important tasks found" });
     }
 
     res.status(200).json({ data: userData.tasks });
   } catch (error) {
-    console.error("Error fetching important tasks:", error);
+    // console.error("Error fetching important tasks:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
@@ -229,12 +229,12 @@ router.get("/geteCom", verifyToken, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
     if (!userData.tasks || userData.tasks.length === 0) {
-      return res.status(404).json({ message: "No important tasks found" });
+      // return res.status(404).json({ message: "No important tasks found" });
     }
 
     res.status(200).json({ data: userData.tasks });
   } catch (error) {
-    console.error("Error fetching important tasks:", error);
+    // console.error("Error fetching important tasks:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
@@ -258,15 +258,15 @@ router.get("/geteInCom", verifyToken, async (req, res) => {
 
     // Handle case where user or tasks are not found
     if (!userData) {
-      return res.status(404).json({ message: "User not found" });
+      // return res.status(404).json({ message: "User not found" });
     }
     if (!userData.tasks || userData.tasks.length === 0) {
-      return res.status(404).json({ message: "No important tasks found" });
+      // return res.status(404).json({ message: "No important tasks found" });
     }
 
     res.status(200).json({ data: userData.tasks });
   } catch (error) {
-    console.error("Error fetching important tasks:", error);
+    // console.error("Error fetching important tasks:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });

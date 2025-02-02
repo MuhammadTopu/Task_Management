@@ -14,19 +14,13 @@ const Cards = ({ home, setInputDiv, data, setData, setUpdatedData }) => {
   // Function to toggle task completion
   const handleCompleteTask = async (id) => {
     try {
-      await axios.put(
+       await axios.put(
         `http://localhost:8080/api/v2/updateComp-task/${id}`,
         {},
         { headers }
       );
-
-      // Update state to reflect changes
-      setData((prevData) => ({
-        ...prevData,
-        tasks: prevData.tasks.map((task) =>
-          task._id === id ? { ...task, complete: !task.complete } : task
-        ),
-      }));
+      
+      
     } catch (error) {
       console.log(error);
       
@@ -38,11 +32,6 @@ const Cards = ({ home, setInputDiv, data, setData, setUpdatedData }) => {
     try {
       await axios.delete(`http://localhost:8080/api/v2/deletetask/${id}`, { headers });
   
-      // Remove the deleted task from state
-      setData((prevData) => ({
-        ...prevData,
-        tasks: prevData.tasks.filter((task) => task._id !== id),
-      }));
     } catch (error) {
       console.log(error);
     }
@@ -56,14 +45,6 @@ const Cards = ({ home, setInputDiv, data, setData, setUpdatedData }) => {
         {},
         { headers }
       );
-
-      // Update state to reflect importance change
-      setData((prevData) => ({
-        ...prevData,
-        tasks: prevData.tasks.map((task) =>
-          task._id === id ? { ...task, important: !task.important } : task
-        ),
-      }));
     } catch (error) {
       console.log(error);
      
@@ -77,9 +58,9 @@ const Cards = ({ home, setInputDiv, data, setData, setUpdatedData }) => {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 p-4 gap-4">
-      {data.map((task) => (
+      {data && data.map((task,i) => (
         <div
-          key={task._id}
+          key={i}
           className={`${
             task.complete ? "border-green-900" : "border-red-900"
           } bg-gray-800 border rounded-md p-4 hover:bg-gray-700 flex flex-col justify-between`}
@@ -91,13 +72,15 @@ const Cards = ({ home, setInputDiv, data, setData, setUpdatedData }) => {
 
           <div className="mt-2 w-full flex items-center justify-between">
 {/* completed button */}
-            <button
+            <button 
               className={`${
-                task.complete ? "bg-green-600" : "bg-red-400"
+                task.complete === false ? "bg-red-600" : "bg-green-600"
               } p-2 rounded`}
-              onClick={() => handleCompleteTask(task._id)}
+             onClick={()=>handleCompleteTask(task._id)}
+             
+              
             >
-              {task.complete ? "Completed" : "Incomplete"}
+              {task.complete === true ? "Completed" : "Incomplete"}
             </button>
 
 {/* update button */}

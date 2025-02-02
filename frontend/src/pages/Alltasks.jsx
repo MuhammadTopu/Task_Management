@@ -1,41 +1,26 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cards from '../components/Cards';
 import InputData from '../components/InputData';
 
 
 const Alltasks = () => {
-  const navigate = useNavigate(); 
   const [Data, setData] = useState();
   const [inputDivVisibility, setInputDivVisibility] = useState("hidden");
   const [UpdatedData, setUpdatedData] = useState({ id: "", title: "", disc: "" });
 
-  const fetchData = useCallback(async () => {
-    const token = localStorage.getItem("token");
+  const headers = {
+    id: localStorage.getItem("id"),
+    authorization: `Bearer ${localStorage.getItem("token")}`
+  }
 
-    if (!token) {
-      console.error("Token not found. Redirecting to login...");
-      navigate("/login", { replace: true });
-      return;
-    }
-
-    const headers = {
-      id: localStorage.getItem("id"),
-      authorization: `Bearer ${token}`,
-    };
-
-    try {
+  useEffect(()=>{
+    const fetch = async () =>{
       const response = await axios.get("http://localhost:8080/api/v2/gettask", { headers });
-      setData(response.data.data); // Ensure this is the correct data path
-    } catch (error) {
-      console.error("Error fetching tasks:", error);
-    }
-  }, [navigate]);
-
-  useEffect(() => {
-    fetchData(); // Fetch tasks initially
-  }, [fetchData]);
+      setData(response.data.data);
+    };
+    fetch();
+  });
 
   return (
     <>
@@ -56,7 +41,6 @@ const Alltasks = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <InputData 
             setInputDiv={setInputDivVisibility} 
-            fetchData={fetchData} 
             UpdatedData={UpdatedData} 
             setUpdatedData={setUpdatedData}
           />

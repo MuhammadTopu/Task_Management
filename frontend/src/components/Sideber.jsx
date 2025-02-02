@@ -64,8 +64,9 @@ const Sideber = () => {
       setData(response.data.data);
    
   };
-
-  fetchData();
+  if(localStorage.getItem("id")&&localStorage.getItem("token")){
+    fetchData(); // Fetch tasks initially
+  }
 }, [navigate]);
   
   return (

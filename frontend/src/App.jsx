@@ -1,5 +1,5 @@
 import Home from './pages/Home';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Alltasks from './pages/Alltasks';
 import Importanttsks from './pages/Importanttsks';
 import Completedtsk from './pages/Completedtsk';
@@ -13,7 +13,6 @@ import { useDispatch } from 'react-redux';
 
 const App = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   useEffect(() => {
@@ -23,18 +22,24 @@ const App = () => {
     if (id && token) {
       dispatch(authActions.login());
     } 
-    
-  }, [isLoggedIn, navigate, dispatch]);
+  }, [dispatch]);
 
   return (
     <div className="bg-gray-900 text-white h-screen p-2 relative">
       <Routes>
-        <Route path="/" element={<Home />}>
-          <Route index element={<Alltasks />} />
-          <Route path="important_tasks" element={<Importanttsks />} />
-          <Route path="completed_tasks" element={<Completedtsk />} />
-          <Route path="incompleted_tasks" element={<Incompletedtsk />} />
-        </Route>
+        {!isLoggedIn ? (
+          // If user is not logged in, redirect to /signup
+          <Route path="*" element={<Navigate to="/signup" replace />} />
+        ) : (
+          <>
+            <Route path="/" element={<Home />}>
+              <Route index element={<Alltasks />} />
+              <Route path="important_tasks" element={<Importanttsks />} />
+              <Route path="completed_tasks" element={<Completedtsk />} />
+              <Route path="incompleted_tasks" element={<Incompletedtsk />} />
+            </Route>
+          </>
+        )}
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
       </Routes>

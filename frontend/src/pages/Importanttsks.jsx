@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 const ImportantTasks = () => {
-  const [data, setData] = useState([]); // ✅ Ensure it's an array
+  const [Data, setData] = useState([]); // ✅ Ensure it's an array
 
   const headers = {
     id: localStorage.getItem("id"),
@@ -18,25 +18,23 @@ const ImportantTasks = () => {
           "http://localhost:8080/api/v2/geteImp-task",
           { headers }
         );
-
-        // ✅ Ensure response is valid and always an array
-        const tasks = response?.data?.data || [];
-        setData(tasks);
-      } catch (error) {
-        console.error("Error fetching tasks:", error);
-        setData([]); // Prevents undefined issues
+        setData(response.data.data);
+      } catch {
+       throw new Error("");
+       
+        
       }
     };
 
     fetchTasks();
-  }, []);
+  });
 
   return (
     <div>
-      {data.length === 0 ? (
+      {Data.length === 0 ? (
         <p className="text-center text-gray-500">There are no important tasks.</p>
       ) : (
-        <Cards home={true} data={data} setData={setData} /> // ✅ Pass setData
+        <Cards home={true} data={Data}/>
       )}
     </div>
   );

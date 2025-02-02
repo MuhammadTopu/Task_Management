@@ -26,7 +26,7 @@ const InputData = ({ setInputDiv, fetchData , UpdatedData , setUpdatedData}) => 
       await axios.post("http://localhost:8080/api/v2/create", formData, { headers });
       setFormData({ title: "", disc: "" });
       setInputDiv("hidden");
-      fetchData(); // Fetch the latest tasks after adding a new one
+      
     } catch (error) {
       console.error("Error adding task:", error);
     }
