@@ -27,7 +27,7 @@ const Login = () => {
         setTimeout(() => setAlert(""), 3000); // Hide alert after 3 seconds
         return;
       }else{
-       const response = await axios.post("http://localhost:8080/api/v1/login", Data); 
+       const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/login`, Data); 
       setData({email: "", password: "" });
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("id", response.data.id);

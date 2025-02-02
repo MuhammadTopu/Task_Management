@@ -8,15 +8,14 @@ const Alltasks = () => {
   const [Data, setData] = useState();
   const [inputDivVisibility, setInputDivVisibility] = useState("hidden");
   const [UpdatedData, setUpdatedData] = useState({ id: "", title: "", disc: "" });
-
   const headers = {
     id: localStorage.getItem("id"),
     authorization: `Bearer ${localStorage.getItem("token")}`
   }
-
+ 
   useEffect(()=>{
     const fetch = async () =>{
-      const response = await axios.get("http://localhost:8080/api/v2/gettask", { headers });
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v2/gettask`, { headers });
       setData(response.data.data);
     };
     fetch();

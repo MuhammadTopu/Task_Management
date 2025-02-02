@@ -15,7 +15,7 @@ const Incompletedtsk = () => {
     const fetchTasks = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/v2/geteInCom",
+          `${import.meta.env.VITE_API_URL}/api/v2/geteInCom`,
           { headers }
         );
         setData(response.data.data);

@@ -15,7 +15,7 @@ const Cards = ({ home, setInputDiv, data, setData, setUpdatedData }) => {
   const handleCompleteTask = async (id) => {
     try {
        await axios.put(
-        `http://localhost:8080/api/v2/updateComp-task/${id}`,
+        `${import.meta.env.VITE_API_URL}/api/v2/updateComp-task/${id}`,
         {},
         { headers }
       );
@@ -30,7 +30,7 @@ const Cards = ({ home, setInputDiv, data, setData, setUpdatedData }) => {
   // Function to toggle task delete
   const deleteTask = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/api/v2/deletetask/${id}`, { headers });
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/v2/deletetask/${id}`, { headers });
   
     } catch (error) {
       console.log(error);
@@ -41,7 +41,7 @@ const Cards = ({ home, setInputDiv, data, setData, setUpdatedData }) => {
   const handleImpTask = async (id) => {
     try {
       await axios.put(
-        `http://localhost:8080/api/v2/updateImp-task/${id}`,
+        `${import.meta.env.VITE_API_URL}/api/v2/updateImp-task/${id}`,
         {},
         { headers }
       );

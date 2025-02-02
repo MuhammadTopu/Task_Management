@@ -60,7 +60,7 @@ const Sideber = () => {
       id: localStorage.getItem("id"),
       authorization: `Bearer ${token}`,
     };
-      const response = await axios.get("http://localhost:8080/api/v2/gettask", { headers });
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v2/gettask`, { headers });
       setData(response.data.data);
    
   };

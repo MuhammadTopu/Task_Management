@@ -23,7 +23,7 @@ const InputData = ({ setInputDiv, fetchData , UpdatedData , setUpdatedData}) => 
     }
 
     try {
-      await axios.post("http://localhost:8080/api/v2/create", formData, { headers });
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/v2/create`, formData, { headers });
       setFormData({ title: "", disc: "" });
       setInputDiv("hidden");
       
@@ -38,7 +38,7 @@ const UpdateTask = async () => {
   }
 
   try {
-    await axios.put(`http://localhost:8080/api/v2/updatetask/${UpdatedData.id}`, formData, { headers });
+    await axios.put(`${import.meta.env.VITE_API_URL}/api/v2/updatetask/${UpdatedData.id}`, formData, { headers });
 
     setFormData({ title: "", disc: "" });
     setInputDiv("hidden");
