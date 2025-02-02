@@ -15,9 +15,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/v1",userApi);
 app.use("/api/v2",taskApi);
 
-app.use("/", (req,res)=>{
-    res.send("Hi, from backend");
-})
+// app.use("/", (req,res)=>{
+//     res.send("Hi, from backend");
+// })
 
 
 ;
