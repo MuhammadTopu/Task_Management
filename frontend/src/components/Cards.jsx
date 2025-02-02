@@ -5,7 +5,7 @@ import { FiEdit } from "react-icons/fi";
 
 import axios from "axios";
 
-const Cards = ({ home, setInputDiv, data, setData, setUpdatedData }) => {
+const Cards = ({ home, setInputDiv, data, setUpdatedData }) => {
   const headers = {
     id: localStorage.getItem("id"),
     authorization: `Bearer ${localStorage.getItem("token")}`,
