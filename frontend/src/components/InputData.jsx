@@ -57,17 +57,18 @@ const UpdateTask = async () => {
       <div className="fixed left-0 top-0 bg-slate-800 opacity-80 h-screen w-full"></div>
       <div className="fixed left-0 top-0 flex items-center justify-center h-screen w-full">
         <div className='w-2/6 bg-gray-900 p-4 rounded text-black'>
-          <button 
-          className='flex justify-end text-2xl hover:text-white' 
-          onClick={() => {
-          setInputDiv("hidden");
-          setFormData({title:"", disc:""});
-          setUpdatedData({id:"" , title:"", disc:""});
-          
-        }
-          }>
-            <RxCross2 className="hover:cursor-pointer" />
-          </button>
+        <div className="flex justify-end">
+  <button
+    className="text-[1.5xl] hover:border rounded-full p-1  hover:text-red-600 hover:transition-all hover:transition-duration-{3000ms}"
+    onClick={() => {
+      setInputDiv("hidden");
+      setFormData({ title: "", disc: "" });
+      setUpdatedData({ id: "", title: "", disc: "" });
+    }}
+  >
+    <RxCross2 className="hover:cursor-pointer" />
+  </button>
+  </div>
           <input
             type="text" 
             placeholder='Title' 

@@ -74,14 +74,14 @@ const Sideber = () => {
       {Data && <div>
         <h2 className="text-xl font-semibold">{Data.username}</h2>
         <h4 className="mb-1 text-gray-500">{Data.email}</h4>
-        <hr />
+        <hr  />
       </div>}
       <div>
         {data.map((item, key) => (
           <Link
             to={item.link}
             className="my-2 flex items-center gap-1 hover:bg-gray-500 rounded-sm 
-            transition-all duration-300 p-4 text-lg"
+            transition-all duration-300 p-3 ml-0 text-[15px] hover:text-[16px]"
             key={key}
           >
             {item.icon}
