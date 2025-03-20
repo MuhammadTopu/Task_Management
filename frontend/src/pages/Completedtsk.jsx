@@ -1,47 +1,52 @@
-import Cards from "../components/Cards";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Cards from "../components/Cards";
 
 const Completedtsk = () => {
-  const [Data, setData] = useState([]); // ✅ Ensure it's an array
+  const [Data, setData] = useState([]); 
 
-  const headers = {
-    id: localStorage.getItem("id"),
-    authorization: `Bearer ${localStorage.getItem("token")}`,
+
+  const fetchTasks = async () => {
+    try {
+      const headers = {
+        id: localStorage.getItem("id"),
+        authorization: `Bearer ${localStorage.getItem("token")}`,
+      };
+
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/tasks/completed`,
+        { headers }
+      );
+
+       
+      setData(response.data || []); 
+
+    } catch (error) {
+      console.error("Error fetching completed tasks:", error.response?.data || error.message);
+    }
   };
 
-  // ✅ Fetch tasks on mount
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/v2/geteCom`,
-          { headers }
-        );
-        setData(response.data.data);
-      } catch {
-       throw new Error("");
-       
-        
-      }
-    };
 
+  useEffect(() => {
+ 
     fetchTasks();
-  });
+
+   
+    const intervalId = setInterval(fetchTasks, 5000);
+
+  
+    return () => clearInterval(intervalId);
+  }, []); 
 
   return (
     <div>
       {Data.length === 0 ? (
-        <p className="text-center text-gray-500">There are no Completed tasks.</p>
+        <p className="text-center text-gray-500">There are no completed tasks.</p>
       ) : (
-        <Cards home={true} data={Data}/>
+        <Cards home={true} data={Data} />
       )}
     </div>
   );
 };
 
 export default Completedtsk;
-
-
-
-

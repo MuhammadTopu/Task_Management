@@ -1,19 +1,17 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { BiTask } from "react-icons/bi";
 import { IoMdStar } from "react-icons/io";
 import { SiGoogletasks } from "react-icons/si";
 import { BiTaskX } from "react-icons/bi";
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { authActions } from "../store/auth";
-import { useState } from "react";
-import axios from "axios";
-
 
 const Sideber = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [Data, setData] = useState();
+  const [user, setUser] = useState(null); 
 
   const data = [
     {
@@ -39,43 +37,56 @@ const Sideber = () => {
   ];
 
   const logout = () => {
-    // Clear auth data and redirect
     dispatch(authActions.logout());
     localStorage.removeItem("id");
     localStorage.removeItem("token");
-    navigate("/login",{replace: true});
+    navigate("/login", { replace: true });
   };
 
- useEffect(() => {
-  const fetchData = async () => {
-    const token = localStorage.getItem("token");
+ 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const token = localStorage.getItem("token");
 
-    if (!token) {
-      console.error("Token not found. Redirecting to login...");
-      navigate("/login",{replace:true});
-      return;
-    }
+      if (!token) {
+        console.error("Token not found. Redirecting to login...");
+        navigate("/login", { replace: true });
+        return;
+      }
 
-    const headers = {
-      id: localStorage.getItem("id"),
-      authorization: `Bearer ${token}`,
+      const headers = {
+        authorization: `Bearer ${token}`,
+      };
+
+      try {
+        
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/users/profile`,
+          { headers }
+        );
+        setUser(response.data);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
     };
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v2/gettask`, { headers });
-      setData(response.data.data);
-   
-  };
-  if(localStorage.getItem("id")&&localStorage.getItem("token")){
-    fetchData(); // Fetch tasks initially
-  }
-}, [navigate]);
-  
+
+    if (localStorage.getItem("token")) {
+      fetchUserData();
+    }
+  }, [navigate]);
+
   return (
     <>
-      {Data && <div>
-        <h2 className="text-xl font-semibold">{Data.username}</h2>
-        <h4 className="mb-1 text-gray-500">{Data.email}</h4>
-        <hr  />
-      </div>}
+      {user ? (
+        <div>
+          <h2 className="text-xl font-semibold">{user.name}</h2>
+          <h4 className="mb-1 text-gray-500">{user.email}</h4>
+          <hr />
+        </div>
+      ) : (
+        <p>Loading user data...</p>
+      )}
+
       <div>
         {data.map((item, key) => (
           <Link
@@ -92,7 +103,7 @@ const Sideber = () => {
       <div
         className="w-full bg-gray-500 p-2 text-center
       rounded-sm hover:bg-red-500 transition-all duration-300"
-      > 
+      >
         <button onClick={logout} className="w-full">Log out</button>
       </div>
     </>

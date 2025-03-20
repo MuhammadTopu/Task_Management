@@ -1,40 +1,47 @@
-import Cards from "../components/Cards";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Cards from "../components/Cards";
 
 const ImportantTasks = () => {
-  const [Data, setData] = useState([]); // ✅ Ensure it's an array
+  const [Data, setData] = useState([]); 
 
-  const headers = {
-    id: localStorage.getItem("id"),
-    authorization: `Bearer ${localStorage.getItem("token")}`,
+  const fetchTasks = async () => {
+    try {
+      const headers = {
+        id: localStorage.getItem("id"),
+        authorization: `Bearer ${localStorage.getItem("token")}`,
+      };
+
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/tasks/important`,
+        { headers }
+      );
+
+      // console.log("Fetched Important Tasks:", response.data); 
+      setData(response.data || []); 
+
+    } catch (error) {
+      console.error("Error fetching important tasks:", error.response?.data || error.message);
+    }
   };
 
-  // ✅ Fetch tasks on mount
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/v2/geteImp-task`,
-          { headers }
-        );
-        setData(response.data.data);
-      } catch {
-       throw new Error("");
-       
-        
-      }
-    };
 
     fetchTasks();
-  });
+
+
+    const intervalId = setInterval(fetchTasks, 5000);
+
+   
+    return () => clearInterval(intervalId);
+  }, []); 
 
   return (
     <div>
       {Data.length === 0 ? (
         <p className="text-center text-gray-500">There are no important tasks.</p>
       ) : (
-        <Cards home={true} data={Data}/>
+        <Cards home={true} data={Data} />
       )}
     </div>
   );

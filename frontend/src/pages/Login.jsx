@@ -1,17 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import axios from "axios";
+import axios from 'axios';
 import { authActions } from '../store/auth';
 import { useSelector } from 'react-redux';
+
 const Login = () => {
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-  if (isLoggedIn == true) {
-    navigate('/');
-  }
- const dispatch = useDispatch();
-
+  
+  const dispatch = useDispatch();
   const [Data, setData] = useState({ email: "", password: "" });
   const [alert, setAlert] = useState(""); // State to manage alert message
 
@@ -22,25 +20,55 @@ const Login = () => {
 
   const submit = async () => {
     try {
+      // Validate input
       if (Data.email === "" || Data.password === "") {
         setAlert("All fields are required!"); // Show alert message
         setTimeout(() => setAlert(""), 3000); // Hide alert after 3 seconds
         return;
-      }else{
-       const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/login`, Data); 
-      setData({email: "", password: "" });
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("id", response.data.id);
-      setAlert(response.data.message); // Show alert message
-      setTimeout(() => setAlert(""), 3000); // Hide alert after 3 seconds
-      dispatch(authActions.login());
-      navigate("/");
-    }
+      }
+
+      // Make API call to login
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/login`, Data);
+
+
+      // Reset input fields
+      setData({ email: "", password: "" });
+
+      // Check if the token exists in the response
+      if (response.data.token) {
+        // Save the token and user ID in localStorage
+        localStorage.setItem("token", response.data.token); // Correct token key
+        localStorage.setItem("id", response.data.userId); // Assuming the backend sends userId
+
+        // Show success message
+        setAlert(response.data.message || "Login successful!"); // Show success message
+        setTimeout(() => setAlert(""), 3000); // Hide alert after 3 seconds
+
+        // Update Redux state
+        dispatch(authActions.login());
+
+        // Redirect user to the homepage
+        navigate("/");  // Now navigation is inside the submit function
+      } else {
+        // If no token is found, log and display message
+        console.error('Token not found in response:', response.data.token);
+        setAlert("Token not found in response.");
+        setTimeout(() => setAlert(""), 3000); // Hide alert after 3 seconds
+      }
+
     } catch (error) {
-      setAlert(error.response.data.message); // Show alert message
-      setTimeout(() => setAlert(""), 3000); // Hide alert after 3 seconds 
+     
+      setAlert(error.response?.data?.message || "Login failed. Please try again.");
+      setTimeout(() => setAlert(""), 3000);
     }
-      };
+  };
+
+  
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/"); 
+    }
+  }, [isLoggedIn, navigate]);
 
   return (
     <div className="h-[98vh] flex items-center justify-center">
@@ -93,7 +121,7 @@ const Login = () => {
           >
             Log in
           </button>
-          <Link to={"/signup"} className="text-blue-400 hover:text-blue-600">
+          <Link to="/signup" className="text-blue-400 hover:text-blue-600">
             Or, create a new account.
           </Link>
         </div>
